@@ -18,6 +18,10 @@
                 display: flex;
                 gap: 0.5rem;
             }
+            .quick-actions button {
+                padding: 1rem;
+                margin-bottom: 0.5rem;
+            }
             h1,h2,h3{line-height:1.2}
         </style>
     </head>
@@ -51,58 +55,69 @@
         <br/>
         <code type="text" id="result"></code>
         <br/>
-        <button type="button"
-            onclick="handleAdd('R')"
-            aria-label="Add R to program">
-        R
-        </button>
-        <button type="button"
-                onclick="handleAdd('Q')"
-                aria-label="Add Q to program">
-            Q
-        </button>
-        <button type="button"
-                onclick="handleAdd('C')"
-                aria-label="Add C to program">
-            C
-        </button>
-        <button type="button"
-                onclick="handleAdd('D')"
-                aria-label="Add D to program">
-            D
-        </button>
-        <button type="button"
-                onclick="handleAdd('F')"
-                aria-label="Add F to program">
-            F
-        </button>
-        <button type="button"
-                onclick="handleAdd('E')"
-                aria-label="Add E to program">
-            E
-        </button>
-        <br>
-<!--        <button type="button"-->
-<!--                onclick="handleExplain()"-->
-<!--                aria-label="Explain program">-->
-<!--            a-->
-<!--        </button>-->
-        <button type="button"
-                onclick="handleAdd('a')"
-                aria-label="Add a to program">
-            a
-        </button>
-        <button type="button"
-                onclick="handleAdd('b')"
-                aria-label="Add b to program">
-            b
-        </button>
-        <br>
-        <button type="button"
-                onclick="handleDelete()"
-                aria-label="delete last">
-            DEL
-        </button>
+        <div class="quick-actions">
+            <button type="button"
+                onclick="handleAdd('R')"
+                aria-label="Add R to program">
+            R
+            </button>
+            <button type="button"
+                    onclick="handleAdd('Q')"
+                    aria-label="Add Q to program">
+                Q
+            </button>
+            <button type="button"
+                    onclick="handleAdd('C')"
+                    aria-label="Add C to program">
+                C
+            </button>
+            <button type="button"
+                    onclick="handleAdd('D')"
+                    aria-label="Add D to program">
+                D
+            </button>
+            <button type="button"
+                    onclick="handleAdd('F')"
+                    aria-label="Add F to program">
+                F
+            </button>
+            <button type="button"
+                    onclick="handleAdd('E')"
+                    aria-label="Add E to program">
+                E
+            </button>
+            <button type="button"
+                    onclick="handleDelete()"
+                    aria-label="delete last">
+                DEL
+            </button>
+            <br>
+    <!--        <button type="button"-->
+    <!--                onclick="handleExplain()"-->
+    <!--                aria-label="Explain program">-->
+    <!--            a-->
+    <!--        </button>-->
+            <button type="button"
+                    onclick="handleAdd('a')"
+                    aria-label="Add a to program">
+                a
+            </button>
+            <button type="button"
+                    onclick="handleAdd('b')"
+                    aria-label="Add b to program">
+                b
+            </button>
+            <button type="button"
+                    onclick="handleAdd('x')"
+                    aria-label="Add b to program">
+                x
+            </button>
+            <button type="button"
+                    onclick="handleAdd('y')"
+                    aria-label="Add b to program">
+                y
+            </button>
+        </div>
         <h2>Rules:</h2>
         <blockquote>
             <b>Rule Q.</b> For any expression x, <code>Qx</code> names <code>x</code>
