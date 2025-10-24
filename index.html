@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+    <head><meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The Island of Robots</title>
+        <style>
+            body{
+                margin:40px auto;
+                max-width:650px;
+                line-height:1.6;
+                font-size:18px;
+                padding:0 10px;
+            }
+            .menu ol {
+                list-style: none;
+                margin: 0;
+                padding: 1rem;
+                display: flex;
+                gap: 0.5rem;
+            }
+            h1,h2,h3{line-height:1.2}
+        </style>
+    </head>
+    <body>
+<!--        <nav aria-label="Menu" class="menu">-->
+<!--            <ol>-->
+<!--                <li>-->
+<!--                    <a href="index.html">Roberts System</a>-->
+<!--                </li>-->
+<!--            </ol>-->
+<!--        </nav>-->
+
+        <header><h1>Professor Roberts system</h1></header>
+        <label for="problem-select">Choose a problem:</label>
+
+        <select id="problem-select">
+            <option value="">--Please choose a problem--</option>
+            <option value="1">1. x that creates x</option>
+            <option value="2">2. x names x</option>
+            <option value="4">4. Rx names xx</option>
+            <option value="5">5. Rx names x, RQx names QRx, Rx names Qx, RRx names QQx, RQx names RRx</option>
+            <option value="6">6. fixed point x names ax, for given a find x</option>
+            <option value="8">8. x names xx</option>
+            <option value="9">9. x creates xx</option>
+            <option value="10">10. x that creates ax</option>
+            <option value="10">11. double fixed point x names ay, y names bx, given a and b, find x and y</option>
+        </select>
+        <br/>
+        <label for="program">Program:</label>
+        <input type="text" id="program" name="program" placeholder="try RRQfoo">
+        <br/>
+        <code type="text" id="result"></code>
+        <br/>
+        <button type="button"
+            onclick="handleAdd('R')"
+            aria-label="Add R to program">
+        R
+        </button>
+        <button type="button"
+                onclick="handleAdd('Q')"
+                aria-label="Add Q to program">
+            Q
+        </button>
+        <button type="button"
+                onclick="handleAdd('C')"
+                aria-label="Add C to program">
+            C
+        </button>
+        <button type="button"
+                onclick="handleAdd('D')"
+                aria-label="Add D to program">
+            D
+        </button>
+        <button type="button"
+                onclick="handleAdd('F')"
+                aria-label="Add F to program">
+            F
+        </button>
+        <button type="button"
+                onclick="handleAdd('E')"
+                aria-label="Add E to program">
+            E
+        </button>
+        <br>
+<!--        <button type="button"-->
+<!--                onclick="handleExplain()"-->
+<!--                aria-label="Explain program">-->
+<!--            a-->
+<!--        </button>-->
+        <button type="button"
+                onclick="handleAdd('a')"
+                aria-label="Add a to program">
+            a
+        </button>
+        <button type="button"
+                onclick="handleAdd('b')"
+                aria-label="Add b to program">
+            b
+        </button>
+        <br>
+        <button type="button"
+                onclick="handleDelete()"
+                aria-label="delete last">
+            DEL
+        </button>
+        <h2>Rules:</h2>
+        <blockquote>
+            <b>Rule Q.</b> For any expression x, <code>Qx</code> names <code>x</code>
+            <ul>
+                <li><code>QRRR</code> names <code>RRR</code> </li>
+            </ul>
+        </blockquote>
+        <blockquote>
+            <b>Rule R.</b> if x names y then <code>Rx</code> names <code>yy</code>
+            <ul>
+                <li><code>RQABC</code> names <code>ABCABC</code> </li>
+            </ul>
+        </blockquote>
+        <blockquote>
+            <b>Rule C.</b> if x names y then <code>Cx</code> creates <code>y</code>
+        </blockquote>
+        <blockquote>
+            <b>Rule D.</b> if x creates y then <code>Dx</code> destroys <code>y</code>
+            <ul>
+                <li><code>DCQx</code> destroys <code>x</code> </li>
+            </ul>
+        </blockquote>
+        <blockquote>
+            <b>Rule E.</b> if x creates y then <code>Ex</code> enemy of <code>y</code>
+        </blockquote>
+        <blockquote>
+            <b>Rule F.</b> if x creates y then <code>Fx</code> friend of <code>y</code>
+        </blockquote>
+        <script>
+            const programElement = document.getElementById("program")
+            programElement.addEventListener("input", handleProgramChange);
+
+            function handleAdd(c){
+                document.getElementById("program").value += c
+                handleProgramChange()
+            }
+
+            function handleDelete(){
+                document.getElementById("program").value = document.getElementById("program").value.slice(0, -1)
+                handleProgramChange()
+            }
+
+            function handleProgramChange(){
+                document.getElementById("result").innerText = eval_robot(
+                    programElement.value,
+                )
+            }
+
+            function handleExplain(){
+                if (eval_robot(programElement.value)) {
+
+                }
+            }
+
+
+            function eval_robot(prog) {
+                prog.replaceAll("  ", "")
+
+                const names = (prog) => {
+                    if (prog.startsWith("Q")) {
+                        return prog.slice(1)
+                    } else if (prog.startsWith("R")) {
+                        const y = names(prog.slice(1))
+                        if (y) {
+                            return y+y
+                        }
+                    }
+                    return null
+                }
+
+                const creates = (prog) => {
+                    if (prog.startsWith("C")) {
+                        const y = names(prog.slice(1))
+                        if (y) {
+                            return y
+                        }
+                    }
+                    return null
+                }
+
+                const destroys = (prog) => {
+                    if (prog.startsWith("D")) {
+                        const y = names(prog.slice(1))
+                        return y
+                    }
+                    return null
+                }
+
+                const friend = (prog) => {
+                    if (prog.startsWith("F")) {
+                        const y = creates(prog.slice(1))
+                        return y
+                    }
+                    return null
+                }
+
+                const enemy = (prog) => {
+                    if (prog.startsWith("E")) {
+                        const y = creates(prog.slice(1))
+                        return y
+                    }
+                    return null
+                }
+
+                if (names(prog)) {
+                    return "names " + names(prog)
+                } else if (creates(prog)) {
+                    return "creates " + creates(prog)
+                } else if (destroys(prog)) {
+                    return "destroys " + destroys(prog)
+                } else if (friend(prog)) {
+                    return "friend of " + friend(prog)
+                } else if (enemy(prog)) {
+                    return "enemy of " + enemy(prog)
+                } else {
+                    return "error, unexpected " + prog
+                }
+            }
+
+            function explain(prog) {
+                prog.replaceAll(" ", "")
+
+                let description = []
+                const explainHelper = (p) => {
+                   const r = eval_robot(p)
+                    if (!r.startsWith("error")) {
+                        description.push(p + " " + r)
+                        explainHelper(p.slice(1))
+                    }
+                }
+                explainHelper(prog)
+                return description
+            }
+    </script>
+    </body>
+</html>
