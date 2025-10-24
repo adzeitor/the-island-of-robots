@@ -165,7 +165,7 @@
             }
 
             function handleProgramChange(){
-                document.getElementById("result").innerText = programElement.value + " " + eval_robot(
+                document.getElementById("result").innerText = eval_robot(
                     programElement.value,
                 )
             }
@@ -180,34 +180,54 @@
             function eval_robot(prog) {
                 prog.replaceAll("  ", "")
 
+                const error = (err) => {
+                    return "error " + err
+                }
+
+                const isError = (err) => {
+                    return err.startsWith("error")
+                }
+
+                const joinErrors = (err1, err2) => {
+                    return err1 + " " + err2.remove("error ")
+                }
+
                 const names = (prog) => {
                     if (prog.startsWith("Q")) {
+                        if (prog.length < 2) {
+                            return error("Q expects at least one symbol")
+                        }
                         return prog.slice(1)
                     } else if (prog.startsWith("R")) {
-                        const y = names(prog.slice(1))
-                        if (y) {
-                            return y+y
+                        if (prog.length < 2) {
+                            return error("empty R")
                         }
+                        const y = names(prog.slice(1))
+                        if (isError(y)) {
+                            return y
+                        }
+                        return y+y
                     }
-                    return null
+                    return error("expects R or Q")
                 }
 
                 const creates = (prog) => {
                     if (prog.startsWith("C")) {
                         const y = names(prog.slice(1))
-                        if (y) {
-                            return y
+                        if (prog.length < 2) {
+                            return error("C expects something that names something(use R or Q)")
                         }
+                        return y
                     }
-                    return null
+                    return error("expects C")
                 }
 
                 const destroys = (prog) => {
                     if (prog.startsWith("D")) {
-                        const y = names(prog.slice(1))
+                        const y = creates(prog.slice(1))
                         return y
                     }
-                    return null
+                    return error("expects D")
                 }
 
                 const friend = (prog) => {
@@ -215,7 +235,7 @@
                         const y = creates(prog.slice(1))
                         return y
                     }
-                    return null
+                    return error("expects F")
                 }
 
                 const enemy = (prog) => {
@@ -223,21 +243,32 @@
                         const y = creates(prog.slice(1))
                         return y
                     }
-                    return null
+                    return error("expects E")
                 }
 
-                if (names(prog)) {
-                    return "names " + names(prog)
-                } else if (creates(prog)) {
-                    return "creates " + creates(prog)
-                } else if (destroys(prog)) {
-                    return "destroys " + destroys(prog)
-                } else if (friend(prog)) {
-                    return "friend of " + friend(prog)
-                } else if (enemy(prog)) {
-                    return "enemy of " + enemy(prog)
+                const resultOrError = (verb, result) => {
+                    if (isError(result)) {
+                        return result
+                    }
+                    return verb + " " + result
+                }
+
+                if (prog === "") {
+                    return ""
+                }
+
+                if (prog.startsWith("Q") || prog.startsWith("R")) {
+                    return resultOrError("names", names(prog))
+                } else if (prog.startsWith("C")) {
+                    return resultOrError("creates", creates(prog))
+                } else if (prog.startsWith("D")) {
+                    return resultOrError("destroys", destroys(prog))
+                } else if (prog.startsWith("F")) {
+                    return resultOrError("friend of", friend(prog))
+                } else if (prog.startsWith("E")) {
+                    return resultOrError("enemy of", enemy(prog))
                 } else {
-                    return "error, unexpected " + prog
+                    return "error unexpected code: try Q or R"
                 }
             }
 
